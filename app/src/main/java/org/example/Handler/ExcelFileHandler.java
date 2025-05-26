@@ -2,6 +2,8 @@ package org.example.Handler;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -25,24 +27,32 @@ public class ExcelFileHandler implements FileHandler {
     }
 
     @Override
-    public void search(File file, String keyword) {
+    public void search(File file, String keyword, MainApp.SearchType searchType) {
         try (FileInputStream fis = new FileInputStream(file);
              Workbook workbook = new XSSFWorkbook(fis)) {
             
-            for (Sheet sheet : workbook) {
+            Pattern pattern = Pattern.compile(Pattern.quote(keyword), Pattern.CASE_INSENSITIVE);
+
+            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+                Sheet sheet = workbook.getSheetAt(i);
                 for (Row row : sheet) {
                     for (Cell cell : row) {
                         if (cell.getCellType() == CellType.STRING) {
-                            String value = cell.getStringCellValue();
-                            if (value.contains(keyword)) {
-                                app.appendResult(String.format(
-                                    "[XLSX] %s (Sheet: %s, Row: %d, Col: %d): %s\n",
-                                    file.getName(),
-                                    sheet.getSheetName(),
-                                    row.getRowNum() + 1,
-                                    cell.getColumnIndex() + 1,
-                                    value.trim()
-                                ));
+                            String cellValue = cell.getStringCellValue();
+                            if (cellValue != null && !cellValue.isEmpty()) {
+                                Matcher matcher = pattern.matcher(cellValue);
+                                if (matcher.find()) {
+                                    // Menggunakan **kata** untuk penanda bold
+                                    String highlightedCellValue = matcher.replaceAll("**$0**");
+                                    app.appendResult(String.format(
+                                        "Found in %s (Sheet '%s', Row %d, Col %d): %s\n",
+                                        file.getName(),
+                                        sheet.getSheetName(),
+                                        row.getRowNum() + 1,
+                                        cell.getColumnIndex() + 1,
+                                        highlightedCellValue.trim()
+                                    ));
+                                }
                             }
                         }
                     }

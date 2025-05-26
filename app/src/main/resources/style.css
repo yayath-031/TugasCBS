@@ -1,0 +1,194 @@
+/* === Root Variables and Base Styles === */
+.root {
+    -fx-primary-color: #007AFF;   /* Biru modern untuk aksi utama */
+    -fx-secondary-color: #333333; /* Abu-abu gelap untuk teks utama */
+    -fx-accent-color: #FF9500;    /* Oranye untuk aksen dan highlight */
+    -fx-light-grey-color: #D1D1D6;/* Abu-abu terang untuk border dan latar sekunder */
+    -fx-background-color: #F2F2F7;/* Latar belakang utama yang sangat terang/putih pudar */
+    -fx-success-color: #34C759;  /* Hijau untuk notifikasi sukses */
+    -fx-error-color: #FF3B30;    /* Merah untuk notifikasi error */
+
+    -fx-text-on-primary-color: white; /* Warna teks di atas latar warna primer */
+
+    -fx-font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif; /* Font sistem modern */
+    -fx-font-size: 13px; /* Ukuran font dasar */
+}
+
+/* === Header Section === */
+.header {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-secondary-color;
+    -fx-padding: 15px 0 10px 0; /* Atur padding */
+}
+
+.members {
+    -fx-font-size: 12px;
+    -fx-text-fill: #555555; /* Abu-abu sedikit lebih terang dari teks utama */
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0 0 15px 0; /* Padding bawah sebelum separator */
+    -fx-line-spacing: 2px; /* Jarak antar baris */
+}
+
+/* === General Control Styles === */
+.label {
+    -fx-font-weight: normal;
+    -fx-text-fill: -fx-secondary-color;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 0; /* Beri sedikit ruang vertikal untuk label */
+}
+
+/* === Buttons === */
+.button {
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: -fx-text-on-primary-color;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 8px; /* Sudut lebih bulat */
+    -fx-padding: 10px 20px; /* Padding yang lebih nyaman */
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 6, 0, 0, 2); /* Bayangan yang lebih lembut */
+    -fx-transition: all 0.2s ease-in-out; /* Transisi halus */
+}
+
+.button:hover {
+    -fx-background-color: derive(-fx-primary-color, -8%); /* Sedikit lebih gelap saat hover */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 8, 0, 0, 3); /* Bayangan lebih jelas */
+    -fx-translate-y: -1px; /* Efek terangkat sedikit */
+}
+
+.button:pressed {
+    -fx-background-color: derive(-fx-primary-color, -15%); /* Lebih gelap saat ditekan */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 1); /* Bayangan berkurang */
+    -fx-translate-y: 0px; /* Kembali ke posisi awal */
+}
+
+/* === Text Fields and Text Area === */
+.text-field, .text-area {
+    -fx-background-color: white;
+    -fx-border-color: -fx-light-grey-color;
+    -fx-border-width: 1.5px; /* Border sedikit lebih tebal */
+    -fx-border-radius: 8px; /* Sudut yang sama dengan tombol */
+    -fx-padding: 10px; /* Padding internal */
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: derive(-fx-secondary-color, 40%); /* Warna placeholder */
+    -fx-highlight-fill: -fx-accent-color; /* Warna highlight teks */
+    -fx-highlight-text-fill: white;
+    -fx-transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.text-field:focused, .text-area:focused {
+    -fx-border-color: -fx-primary-color; /* Warna border saat fokus */
+    -fx-border-width: 1.5px;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, derive(-fx-primary-color, 70%), 8, 0, 0, 0); /* Efek glow saat fokus */
+}
+
+.text-area {
+    -fx-wrap-text: true;
+}
+
+.text-area .content {
+    -fx-background-color: white;
+    -fx-padding: 5px;
+    -fx-font-family: 'Consolas', 'Menlo', 'Courier New', monospace; /* Font monospace untuk hasil pencarian */
+}
+
+/* === Radio Buttons === */
+.radio-button {
+    -fx-text-fill: -fx-secondary-color;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 0; /* Padding vertikal */
+}
+
+.radio-button .radio { /* Lingkaran luar radio button */
+    -fx-border-width: 2px;
+    -fx-border-color: -fx-primary-color;
+    -fx-background-color: white;
+    -fx-border-radius: 20px; /* Bulat sempurna */
+    -fx-padding: 3px; /* Jarak untuk dot */
+    -fx-transition: border-color 0.2s ease-in-out;
+}
+
+.radio-button:hover .radio {
+    -fx-border-color: derive(-fx-primary-color, -20%); /* Border lebih gelap saat hover */
+}
+
+.radio-button .dot { /* Titik di dalam radio button */
+    -fx-background-color: transparent; /* Awalnya transparan */
+    -fx-background-insets: 0;
+    -fx-background-radius: 20px;
+    -fx-padding: 3px; /* Ukuran dot */
+}
+
+.radio-button:selected .radio {
+    -fx-border-color: -fx-accent-color; /* Warna border saat terpilih */
+}
+
+.radio-button:selected .radio .dot {
+    -fx-background-color: -fx-accent-color; /* Warna dot saat terpilih */
+}
+
+/* === ScrollPane and ScrollBars === */
+.scroll-pane {
+    -fx-background-color: white; /* Latar ScrollPane */
+    -fx-border-color: -fx-light-grey-color;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 8px;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: white; /* Latar area yang bisa di-scroll */
+}
+
+.scroll-pane .corner {
+    -fx-background-color: transparent; /* Sudut antara scrollbar horizontal dan vertikal */
+}
+
+.scroll-bar:horizontal, .scroll-bar:vertical {
+    -fx-background-color: transparent; /* Latar track scrollbar */
+    -fx-background-radius: 8px;
+    -fx-padding: 3px;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: derive(-fx-primary-color, 50%); /* Warna thumb scrollbar */
+    -fx-background-insets: 2;
+    -fx-background-radius: 8px; /* Sudut thumb */
+    -fx-transition: background-color 0.2s ease-in-out;
+}
+.scroll-bar .thumb:hover {
+    -fx-background-color: derive(-fx-primary-color, 30%); /* Warna thumb saat hover */
+}
+
+/* Sembunyikan tombol panah default pada scrollbar (opsional, untuk tampilan lebih minimalis) */
+.scroll-bar .increment-button, .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0; /* Hilangkan padding agar tidak memakan tempat */
+}
+.scroll-bar .increment-arrow, .scroll-bar .decrement-arrow {
+    -fx-shape: " "; /* Kosongkan bentuk panah */
+    -fx-padding: 0;
+}
+
+/* === Separator === */
+.separator .line {
+    -fx-border-color: -fx-light-grey-color; /* Warna garis pemisah */
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+}
+
+/* === Styling Khusus untuk Label Path Folder (Opsional) === */
+/* Jika Anda ingin folderPathLabel memiliki gaya berbeda, tambahkan style class ini di MainApp.java:
+   folderPathLabel.getStyleClass().add("folder-path-display");
+*/
+.folder-path-display {
+    -fx-text-fill: #777777; /* Warna teks lebih lembut untuk path */
+    -fx-font-style: italic;
+    -fx-font-size: 12px;
+    -fx-padding: 5px 2px; /* Padding di sekitar teks path */
+}
