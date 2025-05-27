@@ -15,7 +15,7 @@ import org.example.Core.FileHandler;
 import org.example.ui.MainApp;
 
 public class WordFileHandler implements FileHandler {
-    private final MainApp app;
+    private final MainApp app; // Tetap simpan instance app
 
     public WordFileHandler(MainApp app) {
         this.app = app;
@@ -27,7 +27,7 @@ public class WordFileHandler implements FileHandler {
     }
 
     @Override
-    public void search(File file, String keyword, MainApp.SearchType searchType) {
+    public void search(File file, String keyword, MainApp.SearchType searchType, MainApp app) { // Ambil app dari parameter
         try (FileInputStream fis = new FileInputStream(file)) {
             XWPFDocument doc = new XWPFDocument(fis);
             Pattern pattern = Pattern.compile(Pattern.quote(keyword), Pattern.CASE_INSENSITIVE);
@@ -40,11 +40,14 @@ public class WordFileHandler implements FileHandler {
                 if (paragraphText != null && !paragraphText.isEmpty()) {
                     Matcher matcher = pattern.matcher(paragraphText);
                     if (matcher.find()) {
-                        // Menggunakan **kata** untuk penanda bold
-                        String contextToDisplay = matcher.replaceAll("**$0**");
-                        
-                        app.appendResult(String.format("Found in %s (Paragraph %d): %s\n",
-                            file.getName(), i + 1, contextToDisplay.trim()));
+                        // Kirim data ke MainApp
+                        app.displaySearchResult(
+                            file.getName(),
+                            file.getAbsolutePath(),
+                            "Paragraf " + (i + 1), // Konteks: "Paragraf N"
+                            paragraphText.trim(), // Konten penuh paragraf
+                            keyword // Keyword untuk highlighting di MainApp
+                        );
                     }
                 }
             }
@@ -63,17 +66,21 @@ public class WordFileHandler implements FileHandler {
                         if (cellText != null && !cellText.isEmpty()) {
                             Matcher matcher = pattern.matcher(cellText);
                             if (matcher.find()) {
-                                // Menggunakan **kata** untuk penanda bold
-                                String highlightedCellText = matcher.replaceAll("**$0**");
-                                app.appendResult(String.format("Found in %s (Table %d, Row %d, Col %d): %s\n",
-                                    file.getName(), t + 1, r + 1, c + 1, highlightedCellText.trim()));
+                                // Kirim data ke MainApp
+                                app.displaySearchResult(
+                                    file.getName(),
+                                    file.getAbsolutePath(),
+                                    String.format("Tabel %d, Baris %d, Kolom %d", t + 1, r + 1, c + 1), // Konteks
+                                    cellText.trim(), // Konten penuh sel
+                                    keyword // Keyword untuk highlighting di MainApp
+                                );
                             }
                         }
                     }
                 }
             }
         } catch (Exception e) {
-            app.appendResult("Gagal baca DOCX: " + file.getName() + "\n");
+            app.appendMessage("Gagal baca DOCX: " + file.getName() + "\n");
         }
     }
 }

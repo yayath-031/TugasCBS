@@ -6,27 +6,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher; // Import Matcher
-import java.util.regex.Pattern; // Import Pattern
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.example.Core.FileHandler;
-import org.example.ui.MainApp; // Import MainApp untuk SearchType
+import org.example.ui.MainApp; // Pastikan MainApp diimpor
 
 public class TextBasedFileHandler implements FileHandler {
     private final List<String> supportedExtensions = Arrays.asList(
             ".csv", ".json", ".xml", ".log", ".html", ".java", ".py"
     );
 
-    // Jika handler ini perlu mengirim output ke UI MainApp, Anda perlu menambahkan konstruktor
-    // dan field untuk MainApp, seperti pada handler lainnya.
-    // Untuk saat ini, saya akan biarkan outputnya ke System.out, tapi dengan format baru.
-    // private MainApp app;
-    // public TextBasedFileHandler(MainApp app) {
-    //     this.app = app;
-    // }
+    // Handler ini sekarang akan membutuhkan instance MainApp untuk menampilkan hasil di UI
+    private final MainApp app;
 
-    public TextBasedFileHandler() {
-        // Konstruktor default jika tidak perlu instance MainApp (misalnya, output tetap ke console)
+    public TextBasedFileHandler(MainApp app) {
+        this.app = app;
     }
 
     @Override
@@ -35,7 +30,8 @@ public class TextBasedFileHandler implements FileHandler {
     }
 
     @Override
-    public void search(File file, String keyword, MainApp.SearchType searchType) { // Metode search disesuaikan
+    public void search(File file, String keyword, MainApp.SearchType searchType, MainApp appInstance) {
+        // Gunakan appInstance yang dioper dari FileSearcher (yang merupakan this.app)
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             int lineNum = 1;
@@ -45,17 +41,20 @@ public class TextBasedFileHandler implements FileHandler {
             while ((line = reader.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
                 if (matcher.find()) {
-                    String highlightedLine = matcher.replaceAll("_$0_");
-                    // Output ke System.out dengan format baru
-                    // Jika ingin ke UI, gunakan: app.appendResult(...)
-                    System.out.printf("Found in %s (Line %d): %s\n",
-                            file.getName(), lineNum, highlightedLine.trim());
+                    // Mengirim data ke MainApp untuk ditampilkan sebagai kartu
+                    // Sama seperti handler lainnya
+                    this.app.displaySearchResult( // atau gunakan appInstance jika Anda lebih suka
+                        file.getName(),
+                        file.getAbsolutePath(),
+                        "Baris " + lineNum,      // Konteks
+                        line.trim(),             // Konten penuh baris
+                        keyword                  // Keyword untuk highlighting
+                    );
                 }
                 lineNum++;
             }
         } catch (IOException e) {
-            // Jika ingin ke UI, gunakan: app.appendResult(...)
-            System.out.println("Gagal membaca file (TextBased): " + file.getName());
+            this.app.appendMessage("Gagal membaca file (TextBased): " + file.getName() + "\n");
         }
     }
 }

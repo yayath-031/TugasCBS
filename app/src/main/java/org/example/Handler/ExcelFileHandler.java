@@ -15,7 +15,7 @@ import org.example.Core.FileHandler;
 import org.example.ui.MainApp;
 
 public class ExcelFileHandler implements FileHandler {
-    private final MainApp app;
+    private final MainApp app; // Tetap simpan instance app
 
     public ExcelFileHandler(MainApp app) {
         this.app = app;
@@ -27,7 +27,7 @@ public class ExcelFileHandler implements FileHandler {
     }
 
     @Override
-    public void search(File file, String keyword, MainApp.SearchType searchType) {
+    public void search(File file, String keyword, MainApp.SearchType searchType, MainApp app) { // Ambil app dari parameter
         try (FileInputStream fis = new FileInputStream(file);
              Workbook workbook = new XSSFWorkbook(fis)) {
             
@@ -42,16 +42,14 @@ public class ExcelFileHandler implements FileHandler {
                             if (cellValue != null && !cellValue.isEmpty()) {
                                 Matcher matcher = pattern.matcher(cellValue);
                                 if (matcher.find()) {
-                                    // Menggunakan **kata** untuk penanda bold
-                                    String highlightedCellValue = matcher.replaceAll("**$0**");
-                                    app.appendResult(String.format(
-                                        "Found in %s (Sheet '%s', Row %d, Col %d): %s\n",
+                                    // Kirim data ke MainApp
+                                    app.displaySearchResult(
                                         file.getName(),
-                                        sheet.getSheetName(),
-                                        row.getRowNum() + 1,
-                                        cell.getColumnIndex() + 1,
-                                        highlightedCellValue.trim()
-                                    ));
+                                        file.getAbsolutePath(),
+                                        String.format("Sheet '%s', Baris %d, Kolom %d", sheet.getSheetName(), row.getRowNum() + 1, cell.getColumnIndex() + 1), // Konteks
+                                        cellValue.trim(), // Konten penuh sel
+                                        keyword // Keyword untuk highlighting di MainApp
+                                    );
                                 }
                             }
                         }
@@ -59,7 +57,7 @@ public class ExcelFileHandler implements FileHandler {
                 }
             }
         } catch (Exception e) {
-            app.appendResult("Gagal baca Excel: " + file.getName() + "\n");
+            app.appendMessage("Gagal baca Excel: " + file.getName() + "\n");
         }
     }
 }

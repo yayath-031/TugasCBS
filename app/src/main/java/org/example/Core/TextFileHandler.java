@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import org.example.ui.MainApp;
 
 public class TextFileHandler implements FileHandler {
-    private final MainApp app;
+    private final MainApp app; // Tetap simpan instance app
 
     public TextFileHandler(MainApp app) {
         this.app = app;
@@ -22,26 +22,28 @@ public class TextFileHandler implements FileHandler {
     }
 
     @Override
-    public void search(File file, String keyword, MainApp.SearchType searchType) {
+    public void search(File file, String keyword, MainApp.SearchType searchType, MainApp app) { // Ambil app dari parameter
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             int lineNum = 1;
-            
             Pattern pattern = Pattern.compile(Pattern.quote(keyword), Pattern.CASE_INSENSITIVE);
 
             while ((line = reader.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
                 if (matcher.find()) { 
-                    // Menggunakan **kata** untuk penanda bold
-                    String highlightedLine = matcher.replaceAll("**$0**"); 
-                    
-                    app.appendResult(String.format("Found in %s (Line %d): %s\n",
-                        file.getName(), lineNum, highlightedLine.trim()));
+                    // Kirim semua data ke MainApp untuk ditampilkan sebagai kartu
+                    app.displaySearchResult(
+                        file.getName(),
+                        file.getAbsolutePath(),
+                        "Baris " + lineNum, // Konteks: "Baris N"
+                        line.trim(),         // Konten penuh dari baris
+                        keyword              // Keyword untuk highlighting di MainApp
+                    );
                 }
                 lineNum++;
             }
         } catch (IOException e) {
-            app.appendResult("Error membaca file: " + file.getName() + "\n");
+            app.appendMessage("Error membaca file: " + file.getName() + "\n");
         }
     }
 }
