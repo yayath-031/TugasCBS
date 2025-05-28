@@ -91,5 +91,3 @@ Aplikasi ini memiliki handler spesifik untuk beberapa tipe file dan handler gene
 * Akhmad Hidayat - H071241003
 
 ---
-
-Semoga README ini membantu! Anda bisa menyesuaikan atau menambahkan bagian lain sesuai kebutuhan.

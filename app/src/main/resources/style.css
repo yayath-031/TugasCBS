@@ -40,22 +40,27 @@
 }
 
 .members-area { /* Untuk TextArea anggota */
-    -fx-font-size: 12px;
+    -fx-font-size: 15px;
     -fx-text-fill: -fx-text-muted-color;
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-control-inner-background: transparent;
-    -fx-background-insets: 0;
-    -fx-border-insets: 0;
-    -fx-padding: 0 0 8px 0;
+    -fx-background-color: -fx-control-background; /* Asumsi ini putih atau warna latar yang Anda inginkan */
+    -fx-border-color: -fx-light-grey-color;     /* Warna border */
+    -fx-border-width: 1px;                     /* Lebar border */
+    -fx-border-radius: 5px;                    /* Opsional: sudut membulat */
+    -fx-control-inner-background: -fx-control-background;
+    -fx-padding: 5px 8px;                      /* Padding di dalam TextArea */
     -fx-line-spacing: 1.5px;
-}
-.members-area .content { /* Pastikan konten TextArea juga transparan */
-    -fx-background-color: transparent;
+
+    /* UNTUK MEMPERLUAS AREA SECARA VERTIKAL DARI CSS: */
+    -fx-pref-height: 75px; /* Naikkan nilai ini, akan menimpa setPrefHeight di Java */
+    /* Anda juga bisa menggunakan: */
+     -fx-min-height: 75px;  /* Untuk memastikan tingginya tidak lebih kecil dari ini */
+     -fx-max-height: 150px;  /* Untuk membatasi tinggi maksimal jika kontennya banyak */
 }
 
+.members-area .content {
+    -fx-background-color: -fx-control-background;
+    /* -fx-padding: 0; */ /* Padding konten bisa diatur di .members-area saja */
+}
 /* --- Label Umum (Folder Pencarian, Tipe Pencarian, Kata Kunci) --- */
 .label {
     -fx-font-size: 14px;
